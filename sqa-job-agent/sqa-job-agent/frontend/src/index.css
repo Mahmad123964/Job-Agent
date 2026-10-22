@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Plain CSS (not @apply) so this file never depends on tailwind.config.js
+   tokens being loaded — a dev server started before the config changed would
+   otherwise 500 the stylesheet. Values mirror the tokens in tailwind.config.js. */
+@layer base {
+  body {
+    background: #f5f6f8;
+    color: #13181f;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a {
+    color: #0f7f8c;
+  }
+  a:hover {
+    color: #0b5c66;
+  }
+}
+
+/* Reduced-motion: freeze the decorative animations (the globe handles itself). */
+@media (prefers-reduced-motion: reduce) {
+  .animate-live,
+  .animate-sweep,
+  .animate-pulseDot {
+    animation: none !important;
+  }
+}

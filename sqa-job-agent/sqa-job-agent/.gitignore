@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Env files (never commit real credentials)
+.env
+backend/.env
+frontend/.env
+
+# Database
+*.db
+
+# Node
+node_modules/
+dist/
+
+# OS
+.DS_Store
+
+# Notification ledger (runtime state, like jobs.db)
+backend/notified_ledger.jsonl
+*.db.bak-*

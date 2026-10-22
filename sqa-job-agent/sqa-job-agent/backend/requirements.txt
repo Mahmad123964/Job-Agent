@@ -1,0 +1,26 @@
+# Pull CPU-only torch wheels (PyPI's Linux torch wheel bundles CUDA and is ~2 GB+).
+# Windows/macOS PyPI wheels are already CPU builds; this line is harmless there.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+sqlalchemy>=2.0.29
+requests>=2.31.0
+feedparser>=6.0.10
+apscheduler>=3.10.4
+pydantic>=2.6.4
+psycopg2-binary>=2.9.9
+python-dotenv>=1.0.1
+openpyxl>=3.1.2
+
+# Local Hugging Face classifier (classifier.py) — free, runs on CPU by default
+torch>=2.2.0
+transformers>=4.40.0
+sentence-transformers>=3.0.0
+
+# Fuzzy cross-board duplicate detection (dedup.py)
+rapidfuzz>=3.6.0
+
+# Optional WhatsApp notifier via Twilio (notifiers/whatsapp.py); no-op unless configured
+twilio>=9.0.0
+pytest>=8.0

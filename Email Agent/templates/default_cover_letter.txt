@@ -1,0 +1,9 @@
+Dear Hiring Manager,
+
+I am writing to apply for the {role_title} position at your organization. I have hands-on experience in {core_skill_areas}, including {key_skills}.
+
+Please find my CV attached for your consideration. I would appreciate the opportunity to discuss how my skills and experience could contribute to your team.
+
+Best regards,
+{candidate_name}
+{candidate_role}

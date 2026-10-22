@@ -1,0 +1,76 @@
+owner_email: qanitabokhari5@gmail.com
+
+gemini_model: gemini-3.6-flash
+
+# Folder that holds the currently active CV (PDF and/or DOCX). Newest file wins.
+cv_dir: cv
+
+# Only messages matching this Gmail query are considered. The agent adds its own
+# "-label:<processed>" filter so nothing is scored twice.
+gmail_query: "in:inbox newer_than:3d"
+max_messages_per_run: 25
+poll_interval_seconds: 120
+
+labels:
+  processed: JobAgent/Processed
+  high: JobAgent/High
+  review: JobAgent/Review
+  low: JobAgent/Low
+  sent: JobAgent/Sent
+
+approval:
+  subject_prefix: "[JobAgent] Approval needed"
+  approve_word: APPROVE
+  reject_word: REJECT
+
+state_file: state.json
+
+# Where owner notifications go (approval needed, manual review, LinkedIn lookup, sent).
+# Email is always the primary channel (the approval loop watches its thread for APPROVE/REJECT);
+# Slack and WhatsApp are extra deliveries of the same message and fail independently.
+# Secrets come from .env: SLACK_WEBHOOK_URL, CALLMEBOT_PHONE, CALLMEBOT_APIKEY.
+notifications:
+  channels: [email, slack, whatsapp]   # any combination of: email, slack, whatsapp
+  timeout_seconds: 10
+
+# ---- Link Resolver Agent (python -m agent.link_resolver) --------------------
+# Reads the Job Finder Agent's notification emails, opens each job link and either
+# hands the job to the draft/approval flow above (only when a recruiter email is
+# literally on the page) or asks the owner to look the contact up manually.
+link_resolver:
+  # How to recognise Agent 1's notification emails.
+  notification:
+    subject_prefix: "New SQA job:"   # case-insensitive substring; subject is "New SQA job: <title>"
+    sender: ""                       # optional exact sender address; empty = any sender
+  gmail_query: "in:inbox newer_than:7d"
+  max_messages_per_run: 10
+  max_links_per_email: 10
+  poll_interval_seconds: 300
+  # Links to these domains are never treated as job links.
+  ignore_domains: [google.com, gmail.com, googleapis.com, mail.google.com, unsubscribe.com]
+
+  platforms:
+    linkedin: [linkedin.com, lnkd.in]     # manual lookup only, never an email search
+    job_boards:                           # anything not listed here is treated as "other"
+      indeed: [indeed.com, pk.indeed.com]  # country subdomains (pk., de., uk., ...) already match
+                                            # indeed.com by suffix; pk. listed explicitly for clarity
+      glassdoor: [glassdoor.com]
+      remotive: [remotive.com, remotive.io]
+      weworkremotely: [weworkremotely.com]
+      himalayas: [himalayas.app]
+
+  fetch:
+    respect_robots_txt: true
+    min_seconds_between_requests: 5     # per domain
+    timeout_seconds: 20
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) JobAgentLinkResolver/1.0"
+    # Render the same single URL in headless Chromium when the plain fetch has no usable
+    # text. Needs: pip install playwright && playwright install chromium
+    playwright_fallback: false
+    min_text_chars: 300
+    # Local parts that are never an application contact.
+    ignore_email_prefixes: [noreply, no-reply, donotreply, do-not-reply, privacy, support, press, legal, abuse, unsubscribe, webmaster, postmaster, security, dpo, billing]
+
+  labels:
+    processed: JobAgent/LinkResolved
+  draft_subject: "Application for {role} — {company}"

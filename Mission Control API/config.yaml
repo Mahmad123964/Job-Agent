@@ -1,0 +1,31 @@
+# Mission Control API — read-only event/data layer over the three agents.
+# Every path below is read, never written. Override this file with MC_CONFIG=<path>.
+
+# Folder holding the agents (Desktop/Email Agent). Relative state paths resolve against it.
+agents_dir: "C:/Users/haali/Desktop/Job Agent/Email Agent"
+
+# Agent 2 APPLY (drafts/approvals under "pending") and Agent 3 CONNECT (link outcomes
+# under "links") share this file — it is the Email Agent's state.py file.
+apply_state_file: state.json
+
+# Agent 1 SCOUT job discovery output. Missing file = no SCOUT data (service still runs).
+# Expected shape: {"jobs": [{"url": "...", "title": "...", "company": "...", "platform": "...",
+#                            "found_at": "2026-09-19T10:00:00" | epoch-ms}]}  (or a bare list)
+scout_state_file: scout_state.json
+
+# An agent is "active" if its state changed within this many seconds.
+active_window_seconds: 30
+# How often the state files are polled for changes (drives /ws/events).
+poll_interval_seconds: 2
+
+# Where this service records the stage transitions it observes (its own file, not an agent's).
+events_log: events.jsonl
+
+# Local dev only: matches any http(s) localhost/127.0.0.1/[::1] origin regardless of port,
+# so the frontend still works when Vite auto-increments past 3000. For a real deployment,
+# set this to null and list the exact frontend origin(s) in cors_origins below instead.
+cors_origin_regex: '^https?://(localhost|127\.0\.0\.1|\[::1\])(:\d+)?$'
+
+# Exact origins to allow in addition to the regex above (e.g. a deployed frontend domain).
+# Empty by default since the regex already covers every local dev port.
+cors_origins: []
