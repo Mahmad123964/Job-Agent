@@ -1,0 +1,24 @@
+Job Agent ( Backend )  :
+
+cd "C:\Users\haali\Desktop\Job Agent\sqa-job-agent\sqa-job-agent\backend"
+python -m venv .venv
+      
+uvicorn app.main:app --reload --port 8000
+
+Job Agent ( Frontend ) :
+
+cd "C:\Users\haali\Desktop\Job Agent\sqa-job-agent\sqa-job-agent\frontend"
+ npm run dev
+
+Agent 02 & Agent 03:
+
+Backend ->  cd "C:\Users\haali\Desktop\Job Agent\Mission Control API"
+            uvicorn mission_control.main:app --reload --port 8080
+
+Frontend -> cd "C:\Users\haali\Desktop\Job Agent\Mission Control UI"
+            npm run dev
+
+Server Runner -> cd "C:\Users\haali\Desktop\Job Agent\Email Agent"
+                 python -m agent.link_resolver watch
+
+
